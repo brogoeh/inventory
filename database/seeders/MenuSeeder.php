@@ -38,22 +38,6 @@ class MenuSeeder extends Seeder
                 "menu_link" => "/setting",
                 "is_submenu" => 1,
                 "is_active" => 1
-            ],
-            [
-                "menu_sequence" => "M4",
-                "menu_name" => "menu",
-                "menu_icon" => "Cog8ToothIcon",
-                "menu_link" => "/setting/menu",
-                "is_submenu" => 0,
-                "is_active" => 1
-            ],
-            [
-                "menu_sequence" => "M4",
-                "menu_name" => "submenu",
-                "menu_icon" => "Cog8ToothIcon",
-                "menu_link" => "/setting/submenu",
-                "is_submenu" => 0,
-                "is_active" => 1
             ]
 
         ])->each(fn($v) => Menu::create($v));

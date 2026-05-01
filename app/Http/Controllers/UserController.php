@@ -32,9 +32,7 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         User::create($request->all());
-        return to_route('user.index', [
-            "messages" => "User add successfully!"
-        ]);
+        return to_route('user.index');
     }
 
     /**

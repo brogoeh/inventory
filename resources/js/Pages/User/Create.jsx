@@ -5,6 +5,7 @@ import { useState } from "react";
 
 export default function Create() {
     const { errors, roles } = usePage().props;
+    const Roles = roles.filter((role) => role.is_active == 1);
 
     const [formData, setFormData] = useState({
         user_name: "",
@@ -25,8 +26,6 @@ export default function Create() {
     const handleSubmit = (e) => {
         e.preventDefault();
         router.post(route("user.store"), { ...formData });
-
-        // Kirim ke API di sini
     };
 
     return (
@@ -110,8 +109,8 @@ export default function Create() {
                                     required
                                 >
                                     <option value="">Choose</option>
-                                    {roles.length > 0
-                                        ? roles.map((role, i) => (
+                                    {Roles.length > 0
+                                        ? Roles.map((role, i) => (
                                               <option key={i} value={role.id}>
                                                   {role.role_name}
                                               </option>

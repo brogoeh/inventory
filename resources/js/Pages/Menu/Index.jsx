@@ -82,7 +82,9 @@ export default function Index({ menus }) {
                                     <td className="p-3">
                                         {menu.is_submenu == 0 ? "No" : "Yes"}
                                     </td>
-                                    <td className="p-3">{menu.is_active}</td>
+                                    <td className="p-3">
+                                        {menu.is_active == 1 ? "Yes" : "No"}
+                                    </td>
                                     <td className="p-3 flex gap-2 items-center">
                                         <Link
                                             href={route("menu.edit", menu.id)}

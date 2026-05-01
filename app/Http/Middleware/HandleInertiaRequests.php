@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Menu;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -44,7 +45,9 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'menus_global' => Cache::rememberForever('menu_sidebar', fn() => Menu::where('is_active', 1)->get()->map(
+            'menus_global' => Cache::rememberForever('menu_sidebar', fn() => Menu::whereHas('roles', function ($v) {
+                $v->where('menu_role.role_id', Auth::user()?->role_id);
+            })->where('is_active', 1)->get()->map(
                 fn($q) =>
                 [
                     'menu_name' => $q->menu_name,
@@ -59,6 +62,7 @@ class HandleInertiaRequests extends Middleware
                     'id' => $q->id,
                     'role_code' => $q->role_code,
                     'role_name' => $q->role_name,
+                    'is_active' => $q->is_active,
                 ]
             ))
         ];

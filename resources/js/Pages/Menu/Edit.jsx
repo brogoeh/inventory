@@ -5,7 +5,6 @@ import { useState } from "react";
 
 export default function Edit() {
     const { errors, menu, roles } = usePage().props;
-    const role_id = menu.roles[0].role_name;
 
     const [formData, setFormData] = useState({
         menu_name: menu.menu_name,
@@ -158,9 +157,7 @@ export default function Edit() {
                                               key={i}
                                               value={role.id}
                                               selected={
-                                                  role.role_name == role_id
-                                                      ? true
-                                                      : false
+                                                  role.role_name ? true : false
                                               }
                                           >
                                               {role.role_name}
