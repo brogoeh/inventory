@@ -9,11 +9,12 @@ class ReportingController extends Controller
 {
     public function generatePDF()
     {
-        // dd(request()->start_date);
+        $page = request()->page ?? "1";
         $query = OrderDetail::query();
-
-        if (request()->start_date && request()->end_date) {
-            $query->with(['item', 'order'])->whereBetween('last_receive_dttm', [request()->start_date, request()->end_date])->paginate();
+        $start = request()->start_date;
+        $end = request()->end_date;
+        if ($start && $end) {
+            $query->with(['item', 'order'])->whereBetween('last_receive_dttm', [$start, $end])->paginate();
         }
 
         $orderdetail = $query->with(['item', 'order'])->paginate();

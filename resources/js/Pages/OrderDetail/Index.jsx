@@ -6,24 +6,28 @@ import {
     PrinterIcon,
     TrashIcon,
 } from "@heroicons/react/24/outline";
-import { Head, Link, router, useForm, usePage } from "@inertiajs/react";
-import React, { useEffect, useState } from "react";
+import { Head, Link, router, useForm } from "@inertiajs/react";
+import { debounce, pickBy } from "lodash";
+import React, { useCallback, useEffect, useState } from "react";
 
 export default function Index({ orderdetails }) {
     const { data: orders, meta } = orderdetails;
     const { data, setData } = useForm({
         start_date: "",
         end_date: "",
+        page: "",
     });
-
     const [loading, setLoading] = useState(true);
-    const [search, setSearch] = useState("");
+
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setData({ ...data, [name]: value });
+    // };
+    console.log(data);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setData({ ...data, [name]: value });
+        setData({ ...data, [e.target.name]: e.target.value });
     };
-
     const print = () => {
         return router.get(route("reports"), { ...data });
     };
@@ -35,6 +39,7 @@ export default function Index({ orderdetails }) {
             { ...data },
             {
                 preserveState: true,
+                preserveScroll: true,
             },
         );
     };
@@ -46,6 +51,17 @@ export default function Index({ orderdetails }) {
             });
         }
     };
+
+    const reload = useCallback(
+        debounce((query) => {
+            router.get(route("order-detail.index"), pickBy(query), {
+                preserveState: true,
+            });
+        }, 150),
+        [],
+    );
+
+    useEffect(() => reload(data), [data]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -161,10 +177,10 @@ export default function Index({ orderdetails }) {
                                         {detail.reason_cancelled}
                                     </td>
                                     <td className="p-3 capitalize">
-                                        {detail.created_id == 1 ? "Yes" : "No"}
+                                        {detail.created_id}
                                     </td>
                                     <td className="p-3 capitalize">
-                                        {detail.received_id == 1 ? "Yes" : "No"}
+                                        {detail.received_id}
                                     </td>
                                     <td className="p-3 capitalize">
                                         {detail.last_receive_dttm}
@@ -199,16 +215,29 @@ export default function Index({ orderdetails }) {
                 </table>
                 <div className="flex gap-2 mt-4 text-sm justify-center">
                     {meta.links.map((link, i) => (
-                        <Link
+                        // <Link
+                        //     key={i}
+                        //     href={`${link.url}`}
+                        //     className={`px-3 py-1 rounded border ${
+                        //         link.active
+                        //             ? "bg-blue-500 text-white"
+                        //             : "bg-white"
+                        //     } ${!link.url ? "opacity-50 cursor-not-allowed" : ""}`}
+                        //     dangerouslySetInnerHTML={{ __html: link.label }}
+                        // />
+                        <button
                             key={i}
-                            href={`${link.url}`}
-                            className={`px-3 py-1 rounded border ${
-                                link.active
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-white"
-                            } ${!link.url ? "opacity-50 cursor-not-allowed" : ""}`}
-                            dangerouslySetInnerHTML={{ __html: link.label }}
-                        />
+                            onClick={() =>
+                                setData({
+                                    ...data,
+                                    page: new URL(link.url).searchParams.get(
+                                        "page",
+                                    ),
+                                })
+                            }
+                        >
+                            {link.label}
+                        </button>
                     ))}
                 </div>
             </div>

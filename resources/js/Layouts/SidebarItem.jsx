@@ -11,7 +11,6 @@ export default function SidebarItem({ item, collapsed, isOpen, onToggle }) {
     const submenus = item.submenus.filter((menu) => menu.is_active == 1);
     const hasRoles = item.roles.filter((role) => role);
     const Role = hasRoles[0].pivot.role_id == auth.user.role_id;
-    console.log(Role);
 
     return (
         <div>

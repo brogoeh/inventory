@@ -29,7 +29,7 @@ class WarehouseRequest extends FormRequest
             "city" => "required|string|max:80",
             "regency" => "required|string|max:80",
             "address" => "required|string|max:180",
-            "is_active" => "required",
+            "status" => "required",
             "created_id" => "required",
             "updated_id" => "required"
         ];

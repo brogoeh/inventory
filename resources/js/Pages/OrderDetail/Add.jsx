@@ -171,7 +171,7 @@ export default function Add() {
                                     Created
                                 </label>
                                 <input
-                                    type="text"
+                                    type="number"
                                     name="created_id"
                                     value={formData.created_id}
                                     onChange={handleChange}
@@ -189,7 +189,7 @@ export default function Add() {
                                     Received
                                 </label>
                                 <input
-                                    type="text"
+                                    type="number"
                                     name="received_id"
                                     value={formData.received_id}
                                     onChange={handleChange}

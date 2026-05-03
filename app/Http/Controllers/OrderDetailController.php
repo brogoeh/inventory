@@ -15,13 +15,20 @@ class OrderDetailController extends Controller
      */
     public function index()
     {
-        if (request()->start_date && request()->end_date) {
+        $query = OrderDetail::query();
+        $start = request()->start_date;
+        $end = request()->end_date;
+        if ($start && $end) {
 
-            $orderdetails = OrderDetail::with(['item', 'order'])->whereBetween('last_receive_dttm', [request()->start_date, request()->end_date])->paginate();
+            $orderdetails = (OrderDetailResource::collection($query->with(['item', 'order'])->whereBetween('last_receive_dttm', [request()->start_date, request()->end_date])->paginate()))->additional([
+                [
+                    'page' => request()->page ?? 1,
+                ]
+            ]);
         } else {
-            $orderdetails = OrderDetail::query()->with(['item', 'order'])->paginate();
+            $orderdetails = OrderDetailResource::collection($query->with(['item', 'order'])->paginate());
         }
-        return inertia("OrderDetail/Index", ["orderdetails" => OrderDetailResource::collection($orderdetails)]);
+        return inertia("OrderDetail/Index", ["orderdetails" => $orderdetails]);
     }
 
     /**
